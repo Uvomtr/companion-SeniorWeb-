@@ -1,0 +1,53 @@
+/* Login.css */
+
+/* Center the login container in the middle of the screen */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f4f8;
+  }
+  
+  /* Style for the title */
+  .login-container h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Input fields styles */
+  .login-container .input-field {
+    width: 300px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  /* Button styles */
+  .login-container .login-button {
+    width: 300px;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Button hover effect */
+  .login-container .login-button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Error message styling */
+  .login-container .error-message {
+    color: red;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }

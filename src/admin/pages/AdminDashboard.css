@@ -1,0 +1,133 @@
+/* AdminDashboard.css */
+
+/* General Layout */
+.flex {
+  display: flex;
+}
+
+.h-screen {
+  height: 100vh;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.p-6 {
+  padding: 24px;
+}
+
+/* Summary Section */
+.summary-cards {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1;
+}
+
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.count {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.change {
+  color: green;
+  font-size: 14px;
+}
+
+.card-light {
+  background-color: #f8f9fa;
+}
+
+.total-patients {
+  background-color: #ffcccb;
+}
+
+/* Appointments & Calendar Section */
+.flex.gap-6 {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.appointments-section {
+  width: 50%;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.appointments-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.appointments-table th,
+.appointments-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.appointments-table th {
+  background-color: #f4f4f4;
+}
+
+.appointments-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.appointments-table .text-center {
+  text-align: center;
+  font-style: italic;
+}
+
+/* Calendar Styling */
+.calendar-container {
+  width: 50%;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.react-calendar {
+  width: 100%;
+  border: none;
+}
+
+.react-calendar .highlight {
+  background-color: #ffcccb !important;
+  border-radius: 50%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .summary-cards {
+      flex-direction: column;
+  }
+
+  .flex.gap-6 {
+      flex-direction: column;
+  }
+
+  .appointments-section,
+  .calendar-container {
+      width: 100%;
+  }
+}
