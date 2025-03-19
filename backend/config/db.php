@@ -13,4 +13,7 @@ try {
 } catch (PDOException $e) {
     die(json_encode(["success" => false, "message" => "Database connection failed"]));
 }
+
+// ✅ Return PDO instance
+return $pdo;
 ?>

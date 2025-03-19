@@ -1,42 +1,54 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
-include 'config/db.php';
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+$pdo = require __DIR__ . '/config/db.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-if (
-    isset($data['username']) &&
-    isset($data['password']) &&
-    isset($data['age']) &&
-    isset($data['sex']) &&
-    isset($data['address']) &&
-    isset($data['health_issue'])
-) {
-    $username = $data['username'];
-    $password = password_hash($data['password'], PASSWORD_BCRYPT);
-    $age = $data['age'];
-    $sex = $data['sex'];
-    $address = $data['address'];
-    $health_issue = $data['health_issue'];
+if (!isset($data['username']) || !isset($data['password']) || !isset($data['age']) ||
+    !isset($data['sex']) || !isset($data['address']) || !isset($data['health_issue']) || 
+    !isset($data['role'])) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "All fields are required"]);
+    exit();
+}
 
-    $conn = openConnection();
+$username = trim($data['username']);
+$password = $data['password'];
+$age = (int) $data['age'];
+$sex = trim($data['sex']);
+$address = trim($data['address']);
+$health_issue = trim($data['health_issue']);
+$role = trim($data['role']);
 
-    $stmt = $conn->prepare("INSERT INTO seniors (username, password, age, sex, address, health_issue) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssisss", $username, $password, $age, $sex, $address, $health_issue);
+try {
+    $stmt = $pdo->prepare("SELECT 1 FROM users WHERE username = ?");
+    $stmt->execute([$username]);
 
-    if ($stmt->execute()) {
-        echo json_encode(["status" => "success", "message" => "Senior registered successfully"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Error registering senior"]);
+    if ($stmt->fetch()) {
+        http_response_code(409);
+        echo json_encode(["status" => "error", "message" => "Username already exists"]);
+        exit();
     }
 
-    $stmt->close();
-    $conn->close();
-} else {
-    echo json_encode(["status" => "error", "message" => "All fields are required"]);
+    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+
+    $stmt = $pdo->prepare("INSERT INTO users (username, password, age, sex, address, health_issue, role) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$username, $passwordHash, $age, $sex, $address, $health_issue, $role]);
+
+    http_response_code(201);
+    echo json_encode(["status" => "success", "message" => "User registered successfully"]);
+} catch (PDOException $e) {
+    error_log("Registration error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode(["status" => "error", "message" => "An unexpected error occurred"]);
 }
 ?>

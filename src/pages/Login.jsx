@@ -16,16 +16,15 @@ const Login = () => {
         "http://localhost/senior/backend/auth.php",
         { username, password },
         { 
-          withCredentials: true, // Important for sessions
+          withCredentials: true,
           headers: { "Content-Type": "application/json" }
         }
       );
   
       if (response.data.success) {
         const user = response.data.user;
-        localStorage.setItem("user", JSON.stringify(user)); // Store user data
+        localStorage.setItem("user", JSON.stringify(user));
   
-        // Redirect based on role
         if (user.role === "admin") {
           navigate("/admin-dashboard");
         } else if (user.role === "client") {
@@ -40,7 +39,6 @@ const Login = () => {
       setError("Login failed. Please try again.");
     }
   };
-  
 
   return (
     <div className="login-container">
@@ -63,6 +61,7 @@ const Login = () => {
       <button onClick={handleLogin} className="login-button">
         Login
       </button>
+      <p>Don't have an account? <a href="/register" className="register-link">Register here</a></p>
     </div>
   );
 };
