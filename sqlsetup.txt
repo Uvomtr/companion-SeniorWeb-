@@ -1,0 +1,38 @@
+CREATE DATABASE accnt;
+USE accnt;
+
+
+For Appointment
+CREATE TABLE appointments (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    user_id INT(11) DEFAULT NULL,
+    service VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+    date DATE NOT NULL,
+    time TIME NOT NULL,
+    status ENUM('pending', 'approved', 'rejected') COLLATE utf8mb4_general_ci DEFAULT 'pending',
+    INDEX (user_id)
+);
+For users
+CREATE TABLE users (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+    password VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+    role ENUM('admin', 'client') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'client',
+    age INT(11) NOT NULL,
+    sex ENUM('Male', 'Female') COLLATE utf8mb4_general_ci NOT NULL,
+    address VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+    health_issue TEXT COLLATE utf8mb4_general_ci NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (username)
+);
+
+CREATE TABLE events (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    user_id INT(11) NOT NULL,
+    date_time DATETIME NOT NULL,
+    event_title VARCHAR(255) COLLATE utf8mb4_general_ci NOT NULL,
+    event_description TEXT COLLATE utf8mb4_general_ci NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (user_id)
+);
+
