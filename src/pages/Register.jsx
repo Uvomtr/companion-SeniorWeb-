@@ -85,7 +85,6 @@ const Register = () => {
         <select name="role" value={formData.role} onChange={handleChange}>
           <option value="client">Client</option>
           <option value="admin">Admin</option>
-          <option value="staff">Staff</option>
         </select>
 
         <button type="submit">Register</button>

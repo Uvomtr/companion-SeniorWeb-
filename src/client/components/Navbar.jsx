@@ -1,8 +1,5 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import SeniorCare from "../pages/SeniorCare";  // Move up to client, then go to pages
-
-
 import "./Navbar.css";
 
 function Navbar({ handleLogout, role }) {
@@ -13,10 +10,10 @@ function Navbar({ handleLogout, role }) {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  // Ensure Navbar only renders for clients
+  // Only show the navbar if the user is a client
   if (role !== "client") return null;
 
-  // Function to handle logout
+  // Logout function
   const logoutHandler = () => {
     if (handleLogout) {
       handleLogout();
@@ -28,27 +25,33 @@ function Navbar({ handleLogout, role }) {
 
   return (
     <nav className="Navbar">
+      {/* Logo */}
       <div className="Navbar-logo-container">
-        <div className="Navbar-logo">Brgy. Gen. T. De Leon</div>
+        <div className="Navbar-logo" onClick={() => navigate("/client-dashboard")}>
+          Brgy. Gen. T. De Leon
+        </div>
       </div>
 
+      {/* Mobile Hamburger Menu */}
       <div className="Navbar-hamburger" onClick={toggleSidebar}>
         <div className="Navbar-hamburger-icon"></div>
         <div className="Navbar-hamburger-icon"></div>
         <div className="Navbar-hamburger-icon"></div>
       </div>
 
-      {/* Sidebar for mobile */}
+      {/* Sidebar for Mobile */}
       <div className={`Sidebar ${isSidebarOpen ? "open" : ""}`}>
         <ul className="Sidebar-links">
-          <li><Link to="/client-dashboard">Home</Link></li>
-          <li><Link to="/senior-care">Senior Care</Link></li>
-          <li><Link to="/profile">Profile</Link></li>
+          <li><Link to="/client-dashboard" onClick={toggleSidebar}>Home</Link></li>
+          <li><Link to="/senior-care" onClick={toggleSidebar}>Senior Care</Link></li>
+          <li><Link to="/profile" onClick={toggleSidebar}>Profile</Link></li>
+          <li><Link to="/emergency" onClick={toggleSidebar}>Contact List</Link></li>
+          <li><Link to="/chat" onClick={toggleSidebar}>Chat</Link></li>
           <li><button onClick={logoutHandler} className="logout-btn">Logout</button></li>
         </ul>
       </div>
 
-      {/* Regular navbar links */}
+      {/* Regular Desktop Navbar Links */}
       <ul className="Navbar-links">
         <li><Link to="/client-dashboard" className="Navbar-links-b">Home</Link></li>
         <li><Link to="/senior-care" className="Navbar-links-b">Appointment</Link></li>
@@ -59,8 +62,8 @@ function Navbar({ handleLogout, role }) {
 
       {/* Profile Button */}
       <div className="Navbar-edit-profile">
-        <button className="Navbar-profile-button">
-          <Link to="/profile" className="profile-link">Profile</Link>
+        <button className="Navbar-profile-button" onClick={() => navigate("/profile")}>
+          Profile
         </button>
       </div>
     </nav>

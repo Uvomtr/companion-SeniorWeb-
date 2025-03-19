@@ -79,17 +79,17 @@ const AdminDashboard = () => {
           <div className="card total-patients">
             <h3>Total Seniors</h3>
             <p className="count">{summary.totalPatients.toLocaleString()}</p>
-            <p className="change">{formatPercentChange(summary.patientPercentChange)}</p>
+            
           </div>
           <div className="card card-light">
             <h3>Total Appointments</h3>
             <p className="count">{summary.totalAppointments.toLocaleString()}</p>
-            <p className="change">{formatPercentChange(summary.appointmentPercentChange)}</p>
+            
           </div>
           <div className="card card-light">
             <h3>Total Inquiries</h3>
             <p className="count">{summary.totalInquiries.toLocaleString()}</p>
-            <p className="change">{formatPercentChange(summary.inquiryPercentChange)}</p>
+       
           </div>
         </div>
 
