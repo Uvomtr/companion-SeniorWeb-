@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import Logosrc from "./brgy.png";
 
 function Navbar({ handleLogout, role }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,13 +26,14 @@ function Navbar({ handleLogout, role }) {
 
   return (
     <nav className="Navbar">
-      {/* Logo */}
+    
       <div className="Navbar-logo-container">
+      <img src={Logosrc} alt="Logo" className="app-logo" />
         <div className="Navbar-logo" onClick={() => navigate("/client-dashboard")}>
           Brgy. Gen. T. De Leon
         </div>
       </div>
-
+    
       {/* Mobile Hamburger Menu */}
       <div className="Navbar-hamburger" onClick={toggleSidebar}>
         <div className="Navbar-hamburger-icon"></div>
