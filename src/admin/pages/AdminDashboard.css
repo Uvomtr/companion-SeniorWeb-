@@ -107,9 +107,15 @@
 }
 
 .react-calendar {
-  width: 100%;
-  border: none;
+width: 100%;
+border: none;
+color: black; /* Ensure text is visible */
 }
+
+.react-calendar button {
+color: black; /* Fixes day text color */
+}
+
 
 .react-calendar .highlight {
   background-color: #ffcccb !important;
