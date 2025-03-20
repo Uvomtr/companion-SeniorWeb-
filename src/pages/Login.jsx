@@ -84,7 +84,6 @@ const Login = ({ logo }) => {
           Here, you can manage patient records, schedule appointments, and send inquiries directly to our health center.
           Your health and well-being are our priority!
         </p>
-        <h1>Login</h1>
         {error && <p className="error-message">{error}</p>}
         <input
           type="text"
