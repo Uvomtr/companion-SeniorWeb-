@@ -2,7 +2,20 @@
 // events.php - Event Management
 include 'config/db.php';
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
+
 $method = $_SERVER['REQUEST_METHOD'];
+
+if ($method === 'GET') {
+    // Fetch all events
+    $stmt = $pdo->query("SELECT * FROM events ORDER BY date_time ASC");
+    $events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    echo json_encode($events);
+    exit;
+}
 
 if ($method === 'POST') {
     $data = json_decode(file_get_contents('php://input'), true);
