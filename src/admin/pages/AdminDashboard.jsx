@@ -6,99 +6,138 @@ import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
+  const [loadingAppointments, setLoadingAppointments] = useState(true);
+  const [loadingUsers, setLoadingUsers] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dailyAppointments, setDailyAppointments] = useState([]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState([]);
   const [summary, setSummary] = useState({
     totalPatients: 0,
-    patientPercentChange: 0,
     totalAppointments: 0,
-    appointmentPercentChange: 0,
-    totalInquiries: 0,
-    inquiryPercentChange: 0,
+    totalPending: 0,
   });
 
   useEffect(() => {
-    fetchData();
+    fetchAppointments();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
     fetchDailyAppointments(selectedDate);
+    filterUpcomingAppointments();
   }, [selectedDate, appointments]);
 
-  const fetchData = async () => {
+  const fetchAppointments = async () => {
     try {
-      setLoading(true);
+      setLoadingAppointments(true);
       const response = await fetch("http://localhost/senior/backend/getappointment.php");
       const data = await response.json();
-      console.log("Fetched Data:", data);
 
       if (data.success) {
         setAppointments(data.appointments);
-        setSummary(data.summary);
+        setSummary((prevSummary) => ({
+          ...prevSummary,
+          totalAppointments: data.appointments.length,
+          totalPending: data.appointments.filter((apt) => apt.status === "Pending").length,
+        }));
       }
-      setLoading(false);
     } catch (error) {
-      console.error("Error fetching data:", error);
-      setLoading(false);
+      console.error("Error fetching appointments:", error);
+    } finally {
+      setLoadingAppointments(false);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      setLoadingUsers(true);
+      const response = await fetch("http://localhost/senior/backend/getusers.php");
+      const data = await response.json();
+
+      if (data.success) {
+        setUsers(data.users);
+        setSummary((prevSummary) => ({
+          ...prevSummary,
+          totalPatients: data.totalSeniors, // Update total seniors count
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoadingUsers(false);
     }
   };
 
   const fetchDailyAppointments = (date) => {
-    const formattedDate = date.toLocaleDateString("en-CA"); // Fix for timezone shift
-    console.log("Selected Date:", formattedDate);
-    console.log("All Appointments:", appointments);
-
+    const formattedDate = date.toLocaleDateString("en-CA");
     const filteredAppointments = appointments.filter(
       (apt) => apt.date.startsWith(formattedDate)
     );
-
-    console.log("Filtered Appointments:", filteredAppointments);
     setDailyAppointments(filteredAppointments);
   };
 
-  const formatPercentChange = (value) => {
-    return `${value >= 0 ? "+" : ""}${value}% Last Month`;
+  const filterUpcomingAppointments = () => {
+    const now = new Date();
+    const futureAppointments = appointments.filter((appointment) => {
+      const appointmentDate = new Date(appointment.date + " " + appointment.time);
+      return appointmentDate >= now; // Include today's appointments and future ones
+    });
+    setUpcomingAppointments(futureAppointments);
   };
 
+  // Function to highlight dates with appointments starting from today
   const tileClassName = ({ date, view }) => {
+    const formattedDate = date.toLocaleDateString("en-CA");
+    const hasAppointment = appointments.some(
+      (appointment) => appointment.date.startsWith(formattedDate)
+    );
+    const isUpcoming = upcomingAppointments.some(
+      (appointment) => appointment.date.startsWith(formattedDate)
+    );
+
     if (view === "month") {
-      const formattedDate = date.toLocaleDateString("en-CA");
-      return appointments.some((apt) => apt.date.startsWith(formattedDate)) ? "highlight" : null;
+      if (isUpcoming) {
+        return "upcoming-appointment"; // Highlight upcoming and today's appointments
+      }
+      if (hasAppointment) {
+        return "highlight"; // Highlight any appointment
+      }
     }
+    return "";
   };
 
   return (
     <div className="flex h-screen">
       <Sidebar />
       <div className="flex-1 p-6">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold">Hello, Admin</h1>
+        <p className="text-xl">Good Morning, Admin</p>
 
         {/* Summary Cards */}
         <div className="summary-cards">
           <div className="card total-patients">
             <h3>Total Seniors</h3>
-            <p className="count">{summary.totalPatients.toLocaleString()}</p>
-            
+            <p className="count">{loadingUsers ? "Loading..." : summary.totalPatients.toLocaleString()}</p>
           </div>
           <div className="card card-light">
             <h3>Total Appointments</h3>
-            <p className="count">{summary.totalAppointments.toLocaleString()}</p>
-            
+            <p className="count">{loadingAppointments ? "Loading..." : summary.totalAppointments.toLocaleString()}</p>
           </div>
           <div className="card card-light">
-            <h3>Total Inquiries</h3>
-            <p className="count">{summary.totalInquiries.toLocaleString()}</p>
-       
+            <h3>Total Pending</h3>
+            <p className="count">{loadingAppointments ? "Loading..." : summary.totalPending.toLocaleString()}</p>
           </div>
         </div>
 
-        {/* Appointments and Calendar */}
+        {/* Appointments and Calendar Section */}
         <div className="flex gap-6 mt-6">
           {/* Daily Appointments Table */}
           <div className="appointments-section w-1/2">
-            <h2 className="text-xl font-semibold">Appointments on {selectedDate.toDateString()}</h2>
-            {loading ? (
+            <h2 className="text-xl font-semibold">
+              Appointments on {selectedDate.toDateString()}
+            </h2>
+            {loadingAppointments ? (
               <p>Loading appointments...</p>
             ) : (
               <table className="appointments-table">
@@ -122,7 +161,9 @@ const AdminDashboard = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center">No appointments found</td>
+                      <td colSpan="4" className="text-center">
+                        No appointments found
+                      </td>
                     </tr>
                   )}
                 </tbody>
@@ -136,9 +177,46 @@ const AdminDashboard = () => {
             <Calendar
               onChange={setSelectedDate}
               value={selectedDate}
-              tileClassName={tileClassName}
+              tileClassName={tileClassName} // Pass function to highlight dates
             />
           </div>
+        </div>
+
+        {/* Users Table Section */}
+        <div className="users-section mt-6">
+          <h2 className="text-xl font-semibold">Users/Seniors</h2>
+          {loadingUsers ? (
+            <p>Loading users...</p>
+          ) : (
+            <table className="users-table">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Age</th>
+                  <th>Sex</th>
+                  <th>Address</th>
+                  <th>Health Issue</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.length > 0 ? (
+                  users.map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.username}</td>
+                      <td>{user.age}</td>
+                      <td>{user.sex}</td>
+                      <td>{user.address}</td>
+                      <td>{user.health_issue}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">No users found</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
