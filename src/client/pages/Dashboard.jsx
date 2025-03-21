@@ -17,7 +17,6 @@ const Dashboard = () => {
   const [date, setDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
-  
 
   const services = [
     {
@@ -58,8 +57,7 @@ const Dashboard = () => {
     },
   ];
 
-
-
+  
   // Fetch Events from Backend
   useEffect(() => {
     const fetchEvents = async () => {
