@@ -18,10 +18,10 @@ const Seniors = () => {
   useEffect(() => {
     const fetchSeniors = async () => {
       try {
-        const response = await fetch("http://localhost/php/auth.php");
+        const response = await fetch("http://localhost/php/getusers.php");
         if (!response.ok) throw new Error("Failed to fetch data");
         const result = await response.json();
-        if (result.status === "success") setSeniors(result.data);
+        if (result.success) setSeniors(result.users);
         else alert(result.message);
       } catch (error) {
         console.error("Error fetching seniors:", error.message);
@@ -56,7 +56,7 @@ const Seniors = () => {
       });
 
       const result = await response.json();
-      if (result.status === "success") {
+      if (result.success) {
         alert("Senior added successfully");
         setSeniors([...seniors, formData]);
         setShowModal(false);
@@ -73,6 +73,27 @@ const Seniors = () => {
       }
     } catch (error) {
       console.error("Error adding senior:", error.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Are you sure you want to delete this senior?")) {
+      try {
+        const response = await fetch("http://localhost/php/getusers.php", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id }),
+        });
+        const result = await response.json();
+        if (result.success) {
+          alert(result.message);
+          setSeniors(seniors.filter((senior) => senior.id !== id));
+        } else {
+          alert(result.message);
+        }
+      } catch (error) {
+        console.error("Error deleting senior:", error.message);
+      }
     }
   };
 
@@ -97,8 +118,8 @@ const Seniors = () => {
           </tr>
         </thead>
         <tbody>
-          {seniors.map((senior, index) => (
-            <tr key={index}>
+          {seniors.map((senior) => (
+            <tr key={senior.id}>
               <td>
                 <input type="checkbox" />
               </td>
@@ -109,7 +130,11 @@ const Seniors = () => {
               <td>{senior.health_issue}</td>
               <td className="action-icons">
                 <img src={editIcon} alt="Edit" />
-                <img src={deleteIcon} alt="Delete" />
+                <img
+                  src={deleteIcon}
+                  alt="Delete"
+                  onClick={() => handleDelete(senior.id)}
+                />
               </td>
             </tr>
           ))}
@@ -120,20 +145,52 @@ const Seniors = () => {
         <div className="modal-overlay">
           <div className="modal">
             <h2>Add Senior</h2>
-            <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleInputChange} />
-            <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleInputChange} />
-            <input type="number" name="age" placeholder="Age" value={formData.age} onChange={handleInputChange} />
-            <select name="sex" value={formData.sex} onChange={handleInputChange}>
+            <input
+              type="text"
+              name="username"
+              placeholder="Username"
+              value={formData.username}
+              onChange={handleInputChange}
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+            <input
+              type="number"
+              name="age"
+              placeholder="Age"
+              value={formData.age}
+              onChange={handleInputChange}
+            />
+            <select
+              name="sex"
+              value={formData.sex}
+              onChange={handleInputChange}
+            >
               <option value="">Select Sex</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
-            <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleInputChange} />
-            <input type="text" name="health_issue" placeholder="Health Issue" value={formData.health_issue} onChange={handleInputChange} />
-            <div className="modal-buttons">
-              <button onClick={handleAddSenior}>Submit</button>
-              <button onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
+            <input
+              type="text"
+              name="address"
+              placeholder="Address"
+              value={formData.address}
+              onChange={handleInputChange}
+            />
+            <input
+              type="text"
+              name="health_issue"
+              placeholder="Health Issue"
+              value={formData.health_issue}
+              onChange={handleInputChange}
+            />
+            <button onClick={handleAddSenior}>Add Senior</button>
+            <button onClick={() => setShowModal(false)}>Cancel</button>
           </div>
         </div>
       )}

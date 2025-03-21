@@ -47,6 +47,43 @@ if ($_SERVER["REQUEST_METHOD"] === "GET") {
     ]);
 }
 
+// Handle POST (create a new client)
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Get data from the POST request body
+    $data = json_decode(file_get_contents("php://input"), true);
+
+    $username = $data['username'];
+    $password = $data['password'];
+    $age = $data['age'];
+    $sex = $data['sex'];
+    $address = $data['address'];
+    $health_issue = $data['health_issue'];
+
+    // Validate input
+    if (empty($username) || empty($password) || empty($age) || empty($sex) || empty($address) || empty($health_issue)) {
+        echo json_encode(["success" => false, "message" => "All fields are required"]);
+        exit;
+    }
+
+    // Hash password before storing it
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // Insert client into the database
+    $sql = "INSERT INTO users (username, password, age, sex, address, health_issue, role) 
+            VALUES (?, ?, ?, ?, ?, ?, 'client')";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssisss", $username, $hashedPassword, $age, $sex, $address, $health_issue);
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Senior added successfully"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Failed to add senior"]);
+    }
+
+    $stmt->close();
+}
+
 // Handle DELETE (delete a client)
 if ($_SERVER["REQUEST_METHOD"] === "DELETE") {
     // Get user ID from the URL
