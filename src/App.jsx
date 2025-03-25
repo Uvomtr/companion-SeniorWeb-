@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import ClientDashboard from "./client/pages/Dashboard";
+import Profile from "./client/pages/Profile"; // ✅ Import Profile
+import SeniorCare from "./client/pages/SeniorCare";
 
 const PrivateRoute = ({ children, allowedRoles }) => {
   let user = null;
@@ -49,6 +51,25 @@ function App() {
           element={
             <PrivateRoute allowedRoles={["client"]}>
               <ClientDashboard />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Profile Page (Only for Clients) ✅ */}
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute allowedRoles={["client"]}>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/senior-care"
+          element={
+            <PrivateRoute allowedRoles={["client"]}>
+              <SeniorCare />
             </PrivateRoute>
           }
         />
