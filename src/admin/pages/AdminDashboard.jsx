@@ -12,10 +12,12 @@ const AdminDashboard = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dailyAppointments, setDailyAppointments] = useState([]);
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  
   const [summary, setSummary] = useState({
     totalPatients: 0,
     totalAppointments: 0,
     totalPending: 0,
+    totalApproved: 0, // Add Total Approved to the summary
   });
 
   useEffect(() => {
@@ -40,6 +42,7 @@ const AdminDashboard = () => {
           ...prevSummary,
           totalAppointments: data.appointments.length,
           totalPending: data.appointments.filter((apt) => apt.status === "Pending").length,
+          totalApproved: data.appointments.filter((apt) => apt.status === "Approved").length, // Get total approved
         }));
       }
     } catch (error) {
@@ -128,6 +131,10 @@ const AdminDashboard = () => {
             <h3>Total Pending</h3>
             <p className="count">{loadingAppointments ? "Loading..." : summary.totalPending.toLocaleString()}</p>
           </div>
+          <div className="card card-light">
+            <h3>Total Approved</h3>
+            <p className="count">{loadingAppointments ? "Loading..." : summary.totalApproved.toLocaleString()}</p>
+          </div>
         </div>
 
         {/* Appointments and Calendar Section */}
@@ -192,6 +199,7 @@ const AdminDashboard = () => {
               <thead>
                 <tr>
                   <th>Username</th>
+                  <th>Barangay Number</th>
                   <th>Age</th>
                   <th>Sex</th>
                   <th>Address</th>
@@ -203,6 +211,7 @@ const AdminDashboard = () => {
                   users.map((user) => (
                     <tr key={user.id}>
                       <td>{user.username}</td>
+                      <td>{user.barangay_id}</td>
                       <td>{user.age}</td>
                       <td>{user.sex}</td>
                       <td>{user.address}</td>
@@ -211,7 +220,7 @@ const AdminDashboard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="text-center">No users found</td>
+                    <td colSpan="6" className="text-center">No users found</td>
                   </tr>
                 )}
               </tbody>
