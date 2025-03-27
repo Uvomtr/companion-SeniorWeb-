@@ -151,3 +151,19 @@
     border: 1px solid #ccc;
     border-radius: 8px;
   }
+  .reserved-slots-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .reserved-slots-table th,
+  .reserved-slots-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .reserved-slots-table th {
+    background-color: #f4f4f4;
+  }
+  

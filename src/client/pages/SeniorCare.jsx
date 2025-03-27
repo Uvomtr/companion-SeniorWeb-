@@ -11,6 +11,9 @@ const SeniorCare = ({ handleLogout }) => {
   const [availableTimes, setAvailableTimes] = useState([]);
   const [selectedTime, setSelectedTime] = useState("");
   const [reservedSlots, setReservedSlots] = useState([]);
+  const [remarks, setRemarks] = useState("");  // New state for remarks
+
+  const [todayDate, setTodayDate] = useState(""); // State for today's date
 
   const services = ["Health Check-up", "Free Medicine", "Massage", "Dental Check-up", "Eye Check-up"];
   const times = {
@@ -22,6 +25,11 @@ const SeniorCare = ({ handleLogout }) => {
   };
 
   useEffect(() => {
+    // Get today's date in YYYY-MM-DD format
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];  // Extracts only the date part
+    setTodayDate(formattedDate);
+
     fetchReservedSlots();
   }, []);
 
@@ -32,7 +40,10 @@ const SeniorCare = ({ handleLogout }) => {
         credentials: "include",
       });
       const data = await response.json();
-      setReservedSlots(data.appointments || []);
+      
+      // Filter out past appointments
+      const filteredSlots = data.appointments.filter((slot) => slot.date >= todayDate);
+      setReservedSlots(filteredSlots || []);
     } catch (error) {
       console.error("Error fetching reserved slots:", error);
     }
@@ -54,6 +65,7 @@ const SeniorCare = ({ handleLogout }) => {
       service: selectedService,
       date: selectedDate,
       time: selectedTime,
+      remarks: remarks, // Include remarks in the reservation
       status: "Pending Approval",
     };
 
@@ -89,6 +101,7 @@ const SeniorCare = ({ handleLogout }) => {
     setSelectedService("");
     setSelectedDate("");
     setSelectedTime("");
+    setRemarks("");  // Reset remarks when closing modal
   };
 
   return (
@@ -125,7 +138,13 @@ const SeniorCare = ({ handleLogout }) => {
               ))}
             </select>
             <label>Select a Date:</label>
-            <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="date-input" />
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="date-input"
+              min={todayDate}  // Set the minimum date to today
+            />
             <label>Select a Time:</label>
             <select value={selectedTime} onChange={(e) => setSelectedTime(e.target.value)} className="select-box">
               <option value="">Select a time</option>
@@ -140,13 +159,28 @@ const SeniorCare = ({ handleLogout }) => {
         {modalContent === "viewReservedSlot" && (
           <>
             <h2>Your Reserved Slots</h2>
-            <ul>
-              {reservedSlots.map((slot, index) => (
-                <li key={index}>
-                  {slot.service} on {slot.date} at {slot.time} - Status: {slot.status}
-                </li>
-              ))}
-            </ul>
+            <table className="reserved-slots-table">
+              <thead>
+                <tr>
+                  <th>Service</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Remarks</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservedSlots.map((slot, index) => (
+                  <tr key={index}>
+                    <td>{slot.service}</td>
+                    <td>{slot.date}</td>
+                    <td>{slot.time}</td>
+                    <td>{slot.status}</td>
+                    <td>{slot.remarks || "No remarks"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </>
         )}
 
