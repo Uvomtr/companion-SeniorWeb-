@@ -65,58 +65,70 @@
       const fetchEvents = async () => {
         try {
           const response = await fetch("http://localhost/senior/backend/events.php");
+  
           if (!response.ok) {
-            console.error("HTTP Error:", response.status);
-            throw new Error("Failed to fetch events");
+            throw new Error(`HTTP Error: ${response.status}`);
           }
+  
           const data = await response.json();
-          console.log("Fetched Events:", data); // Debugging
-          setEvents(data);
+  
+          if (!Array.isArray(data.events)) {
+            throw new Error("Invalid data format: Expected an array");
+          }
+  
+          console.log("Fetched Events:", data.events);
+          setEvents(data.events);
         } catch (error) {
           console.error("Error fetching events:", error);
+          setEvents([]); // Prevents breaking the UI
         }
       };
+  
       fetchEvents();
     }, []);
-
+  
     // Filter events for the selected date
     const filteredEvents = events.filter((event) => {
-      const eventDate = new Date(event.date_time).toDateString();
-      return eventDate === date.toDateString();
+      const eventDate = new Date(event.date_time).toISOString().split("T")[0];
+      const selectedDateFormatted = date.toISOString().split("T")[0];
+      return eventDate === selectedDateFormatted;
     });
+  
 
     return (
       <div className="dashboard">
         <Navbar role="client" />
 
         {/* Hero Section */}
-        <section className="homepage">
-          <div className="home-contents">
-            <div className="home-header">
-              <p className="home-subheader">companiON</p>
-              <h1 className="home-title">Senior Care Services</h1>
-              <p className="home-description">
-                Maalaga, makatao, at angkop na serbisyo upang matulungan ang
-                nakatatanda na mamuhay nang komportable, ligtas, at may dignidad.
-              </p>
-            </div>
-          </div>
-          <div className="facebook-box">
-            <iframe
-              src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FBarangay-Gen-T-De-Leon-61550950657692&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
-              width="500"
-              height="500"
-              style={{ border: "none", overflow: "hidden" }}
-              scrolling="no"
-              frameBorder="0"
-              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            ></iframe>
-          </div>
-        </section>
+<section className="homepage">
+  <div className="home-contents">
+    <div className="home-header">
+      <p className="home-subheader">companiON</p>
+      <h1 className="home-title">Senior Care Services</h1>
+      <p className="home-description">
+        Maalaga, makatao, at angkop na serbisyo upang matulungan ang
+        nakatatanda na mamuhay nang komportable, ligtas, at may dignidad.
+      </p>
+    </div>
+  </div>
+  <div className="facebook-box">
+    <iframe
+      src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2FBarangay-Gen-T-De-Leon-61550950657692&tabs=timeline&width=500&height=500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+      width="500"
+      height="500"
+      style={{ border: "none", overflow: "hidden" }}
+      scrolling="no"
+      frameBorder="0"
+      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+    ></iframe>
+  </div>
+</section>
+
 {/* Important Services Section */}
 <div className="container">
   <section className="important-services-section">
     <div className="services-grid">
+      {/* Reminder Section */}
       <div className="rectangle23 paalala1">
         <h2>PAALALA:</h2>
         <p>
@@ -128,6 +140,7 @@
         </p>
       </div>
 
+      {/* Senior Care Section */}
       <div className="rectangle23 seniorcare">
         <Link to="/senior-care" className="link-container">
           <div className="senior-care-content">
@@ -146,6 +159,7 @@
         </Link>
       </div>
 
+      {/* Emergency Services Section */}
       <div className="rectangle23 emergencyservices">
         <Link to="/emergency" className="link-container">
           <div className="emergency-services-content">
@@ -164,6 +178,7 @@
         </Link>
       </div>
 
+      {/* Chat Assistance Section */}
       <div className="rectangle23 chatassistance">
         <Link to="/chat" className="link-container">
           <div className="chat-assistance-content">
@@ -184,6 +199,8 @@
     </div>
   </section>
 </div>
+
+
         {/* Medical Services Section */}
         <section className="service-section">
           <div className="service-header">
@@ -216,32 +233,39 @@
           </div>
         </section>
 
-        {/* Events Section */}
-        <section className="events-section">
-          <div className="events-header">
-            <p className="events-subheader">EVENTS</p>
-            <h1 className="events-title">Our Important Events</h1>
+    
+     {/* Events Section */}
+     <section className="events-section">
+        <div className="events-header">
+          <p className="events-subheader">EVENTS</p>
+          <h1 className="events-title">Our Important Events</h1>
+        </div>
+        <div className="events-container">
+          {/* Calendar Component */}
+          <div className="calendar-container">
+            <Calendar onChange={setDate} value={date} locale="en-US" />
           </div>
-          <div className="events-container">
-            <div className="calendar-container">
-              <Calendar onChange={setDate} value={date} locale="en-US" />
-            </div>
-            <div className="events-list">
-              <h3>Events on {date.toDateString()}</h3>
-              {filteredEvents.length > 0 ? (
-                <ul>
-                  {filteredEvents.map((event) => (
-                    <li key={event.id}>
-                      <strong>{event.event_title}</strong> - {event.event_description}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No events for this date. Try selecting another date.</p>
-              )}
-            </div>
+
+          {/* Events List */}
+          <div className="events-list">
+            <h3>Events on {date.toDateString()}</h3>
+            {filteredEvents.length > 0 ? (
+              <ul>
+                {filteredEvents.map((event) => (
+                  <li key={event.id}>
+                    <strong>{event.event_title}</strong> - {event.event_description} <br />
+                    <em>Organizer:</em> {event.organizer} <br />
+                    <em>Location:</em> {event.location}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No events for this date. Try selecting another date.</p>
+            )}
           </div>
-        </section>
+        </div>
+      </section>
+
 
         {/* Barangay Officials Section */}
         <section className="barangay-officials-section">
