@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
-// Import the images from the local 'icons' folder
+// Import icons
 import logo from "./icons/logo.png";
 import dashboardIcon from "./icons/dashboard.png";
 import seniorsIcon from "./icons/seniors.png";
@@ -14,7 +14,7 @@ import settingsIcon from "./icons/settings.png";
 import helpIcon from "./icons/help.png";
 import logoutIcon from "./icons/logout.png";
 
-const Sidebar = ({ setSelectedOption }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -32,30 +32,41 @@ const Sidebar = ({ setSelectedOption }) => {
 
       {/* Menu Items */}
       <ul className="sidebar-menu">
-        <li className="sidebar-item" onClick={() => navigate("/admin/dashboard")}>
-          <img src={dashboardIcon} alt="Dashboard" className="sidebar-icon" />
-          Dashboard
+        <li className="sidebar-item">
+          <Link to="/admin-dashboard" className="sidebar-link">
+            <img src={dashboardIcon} alt="Dashboard" className="sidebar-icon" />
+            Dashboard
+          </Link>
         </li>
-
-        <li className="sidebar-item" onClick={() => setSelectedOption("seniors")}>
-          <img src={seniorsIcon} alt="Seniors" className="sidebar-icon" />
-          Seniors
+        <li className="sidebar-item">
+          <Link to="/seniors" className="sidebar-link">
+            <img src={seniorsIcon} alt="Seniors" className="sidebar-icon" />
+            Seniors
+          </Link>
         </li>
-        <li className="sidebar-item" onClick={() => setSelectedOption("events")}>
-          <img src={eventsIcon} alt="Events" className="sidebar-icon" />
-          Events
+        <li className="sidebar-item">
+          <Link to="/events" className="sidebar-link">
+            <img src={eventsIcon} alt="Events" className="sidebar-icon" />
+            Events
+          </Link>
         </li>
-        <li className="sidebar-item" onClick={() => setSelectedOption("appointments")}>
-          <img src={appointmentsIcon} alt="Appointments" className="sidebar-icon" />
-          Appointments
+        <li className="sidebar-item">
+          <Link to="/appointments" className="sidebar-link">
+            <img src={appointmentsIcon} alt="Appointments" className="sidebar-icon" />
+            Appointments
+          </Link>
         </li>
-        <li className="sidebar-item" onClick={() => setSelectedOption("emergenciesadmin")}>
-          <img src={emergencyIcon} alt="Emergencies" className="sidebar-icon" />
-          Emergencies
+        <li className="sidebar-item">
+          <Link to="/emergenciesadmin" className="sidebar-link">
+            <img src={emergencyIcon} alt="Emergencies" className="sidebar-icon" />
+            Emergencies
+          </Link>
         </li>
-        <li className="sidebar-item" onClick={() => setSelectedOption("chat")}>
-          <img src={chatIcon} alt="Chat" className="sidebar-icon" />
-          Chat Inquiries
+        <li className="sidebar-item">
+          <Link to="/chatinquiries" className="sidebar-link">
+            <img src={chatIcon} alt="Chat" className="sidebar-icon" />
+            Chat Inquiries
+          </Link>
         </li>
       </ul>
 
@@ -63,13 +74,17 @@ const Sidebar = ({ setSelectedOption }) => {
 
       {/* Settings & Support */}
       <ul className="sidebar-menu">
-        <li className="sidebar-item" onClick={() => setSelectedOption("settings")}>
-          <img src={settingsIcon} alt="Settings" className="sidebar-icon" />
-          Settings
+        <li className="sidebar-item">
+          <Link to="/settingsadmin" className="sidebar-link">
+            <img src={settingsIcon} alt="Settings" className="sidebar-icon" />
+            Settings
+          </Link>
         </li>
-        <li className="sidebar-item" onClick={() => setSelectedOption("help")}>
-          <img src={helpIcon} alt="Help" className="sidebar-icon" />
-          Help & Support
+        <li className="sidebar-item">
+          <Link to="/helpadmin" className="sidebar-link">
+            <img src={helpIcon} alt="Help" className="sidebar-icon" />
+            Help & Support
+          </Link>
         </li>
       </ul>
 
