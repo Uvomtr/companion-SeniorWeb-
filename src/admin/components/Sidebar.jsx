@@ -41,7 +41,7 @@ const Sidebar = () => {
         <li className="sidebar-item">
           <Link to="/seniors" className="sidebar-link">
             <img src={seniorsIcon} alt="Seniors" className="sidebar-icon" />
-            Seniors
+            Users
           </Link>
         </li>
         <li className="sidebar-item">

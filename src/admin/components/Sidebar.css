@@ -50,10 +50,17 @@
     border-radius: 5px;
 }
 
+/* Remove underline and set up hover effect */
+.sidebar-item a {
+    text-decoration: none; /* Prevent the links from being underlined */
+    color: black; /* Set link text color */
+}
+
 .sidebar-item:hover {
     background-color: #b4cafa;
 }
 
+/* Sidebar Icon */
 .sidebar-icon {
     width: 20px;
     height: 20px;
