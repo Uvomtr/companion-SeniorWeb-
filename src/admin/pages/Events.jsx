@@ -15,18 +15,24 @@ const Events = () => {
   const [loading, setLoading] = useState(false);
   const [editingEventId, setEditingEventId] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
-  const [showAllEvents, setShowAllEvents] = useState(false);
-  const [filterDate, setFilterDate] = useState("");
+  const [filterDate, setFilterDate] = useState(""); // Date filter state
 
   useEffect(() => {
+    // Check if a filterDate is set, otherwise default to today's date
     const formattedDate = filterDate || dateTime.toISOString().split("T")[0];
-    const url = `${API_URL}?date=${showAllEvents ? "" : formattedDate}&sortOrder=${sortOrder}`;
+    const url = `${API_URL}?date=${formattedDate}`; // Filter by selected date
 
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data.events)) {
-          setEvents(data.events);
+          let sortedEvents = data.events;
+          if (sortOrder === "asc") {
+            sortedEvents = sortedEvents.sort((a, b) => new Date(a.date_time) - new Date(b.date_time));
+          } else {
+            sortedEvents = sortedEvents.sort((a, b) => new Date(b.date_time) - new Date(a.date_time));
+          }
+          setEvents(sortedEvents);
         } else {
           console.error("Failed to load events:", data.message || "No events found");
         }
@@ -34,7 +40,7 @@ const Events = () => {
       .catch((error) => {
         console.error("Error fetching events:", error);
       });
-  }, [dateTime, sortOrder, showAllEvents, filterDate]);
+  }, [dateTime, sortOrder, filterDate]); // Remove showAllEvents from dependencies
 
   const openModal = (event = null) => {
     setModalIsOpen(true);
@@ -116,7 +122,7 @@ const Events = () => {
   const deleteEvent = (id) => {
     if (window.confirm("Are you sure you want to delete this event?")) {
       setLoading(true);
-  
+
       fetch(API_URL, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
@@ -136,7 +142,7 @@ const Events = () => {
         .finally(() => setLoading(false));
     }
   };
-  
+
   const formatDate = (date) => {
     return new Intl.DateTimeFormat("en-US", {
       weekday: "long",
@@ -161,7 +167,7 @@ const Events = () => {
         <input
           type="date"
           value={filterDate}
-          onChange={(e) => setFilterDate(e.target.value)}
+          onChange={(e) => setFilterDate(e.target.value)} // Only filter by date
         />
       </div>
 
@@ -170,9 +176,6 @@ const Events = () => {
           <option value="asc">Sort Ascending</option>
           <option value="desc">Sort Descending</option>
         </select>
-        <button onClick={() => setShowAllEvents(!showAllEvents)}>
-          {showAllEvents ? "Show Today's Events" : "Show All Events"}
-        </button>
       </div>
 
       <table className="events-table">
