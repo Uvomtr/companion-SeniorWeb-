@@ -83,19 +83,7 @@
   }
   
   
-  /* Senior Care Section */
-  .section {
-    padding: 50px 20px;
-    text-align: center;
-  }
-  
-  /* Services Section */
-  .service-section {
-    background: white;
-    padding: 60px 20px;
-    text-align: center;
-  }
-  
+ 
   .service-content {
     display: flex;
     flex-wrap: wrap;
@@ -104,10 +92,10 @@
   }
   
   .service-image img {
-    width: 250px;
+    width: 100%;
     height: auto;
     border-radius: 10px;
-    margin-right: 20px;
+    max-width: 600px;
   }
   
   .service-details {
@@ -182,6 +170,56 @@
 
 }
 
+.service-subheader {
+  text-align: center;
+}
+.service-title{
+  text-align: center;
+}
+
+/* Ensure section is fully centered */
+.events-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centers horizontally */
+  justify-content: center; /* Centers vertically */
+  text-align: center;
+  width: 100%;
+  padding: 50px 20px;
+}
+
+/* Ensure the header aligns perfectly */
+.events-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Ensures all text is aligned */
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  gap: 0; /* Ensures no extra space */
+}
+
+/* Remove extra margin/padding */
+.events-subheader,
+.events-title {
+  margin: 0; /* Remove default margin */
+  padding: 5px 0; /* Adjust for equal spacing */
+}
+
+/* Additional adjustments */
+.events-subheader {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d60000;
+}
+
+.events-title {
+  font-size: 32px;
+  font-weight: bold;
+  color: #1F1785;
+}
+
+
 /* Events List Container */
 .events-list {
   flex: 1;
@@ -246,6 +284,70 @@
       text-align: center;
     }
   }
+
+  .events-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .calendar-container {
+    flex: 0 0 250px; /* Fixed width for the calendar */
+    max-width: 100%; /* Ensures it doesn't overflow */
+  }
+  
+  .events-list {
+    flex: 1;
+    min-width: 300px; /* Ensures the events list maintains a reasonable width */
+    max-width: 100%;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  ul {
+    padding-left: 20px;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+  
+  li strong {
+    font-weight: bold;
+  }
+  
+  li em {
+    font-style: italic;
+  }
+  
+  p {
+    font-style: italic;
+    color: gray;
+  }
+  
+  /* Ensure responsiveness for smaller screens */
+  @media (max-width: 768px) {
+    .events-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .calendar-container {
+      flex: 1;
+      max-width: 100%;
+    }
+  
+    .events-list {
+      flex: 1;
+      max-width: 100%;
+    }
+  }
+  
   
   /* ----- Barangay Officials ----- */
 /* Main Container */
@@ -279,13 +381,14 @@
     font-family: "Righteous", sans-serif;
     font-size: 2.5rem;
     font-weight: normal;
+    text-align: center;
   }
   
   /* Officials Grid */
   .officials-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* Still 3 columns */
-    gap: 1.5rem; /* Reduced gap */
+    gap: 2.5rem; /* Reduced gap */
     justify-content: center;
     align-items: start;
     margin: 70px 170px 50px; /* Reduced margins */
@@ -295,7 +398,7 @@
   /* Official Card */
   .official-card {
     background: linear-gradient(135deg, #59c2ff, #007aff);
-    padding: 2rem; /* Reduced padding */
+    padding: 0.8rem; /* Reduced padding */
     border-radius: 30px; /* Slightly smaller border radius */
     box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     text-align: center;
@@ -353,12 +456,12 @@
   
   /* --- Paalala --- */
   .container {
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  height: 100vh; /* Full viewport height */
-}
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
 /* Center the entire section */
 .important-services-section {
   display: flex;
@@ -368,13 +471,27 @@
   padding: 20px;
 }
 
-/* Create a 2x2 grid layout */
 .services-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns */
-  gap: 20px; /* Spacing between items */
-  max-width: 800px; /* Set a maximum width */
-  margin: auto; /* Center the grid */
+  grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+  gap: 10px; /* Remove extra space */
+  max-width: 80%; /* Adjust width for centering */
+  margin: auto; /* Centering */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Align items properly */
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ensures full grid width */
 }
 
 /* General styling for each service box */
