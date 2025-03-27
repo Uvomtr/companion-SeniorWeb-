@@ -1,7 +1,7 @@
 <?php
 // Enable error reporting for debugging (remove in production)
-error_reporting(0); // Disable error reporting in the response
-ini_set('display_errors', 0); // Don't display errors
+error_reporting(E_ALL); // Enable all error reporting for debugging
+ini_set('display_errors', 1); // Display errors in development mode
 
 // Enable CORS for development
 header("Access-Control-Allow-Origin: *");
@@ -37,13 +37,14 @@ try {
     
     if ($tableResult->num_rows > 0) {
         // Table exists, proceed with the query
-        $appointmentsQuery = "SELECT a.id, 
-                             COALESCE(u.username, 'Unknown User') as username, 
-                             COALESCE(a.service, 'N/A') as service, 
-                             a.date, a.time, a.status 
-                      FROM appointments a 
-                      LEFT JOIN users u ON a.user_id = u.id 
-                      ORDER BY a.date DESC, a.time ASC";
+        $appointmentsQuery =  "SELECT a.id, 
+                               COALESCE(u.username, 'Unknown User') as username, 
+                               COALESCE(u.barangay_id, 'N/A') as barangay_id, 
+                               COALESCE(a.service, 'N/A') as service,     
+                               a.date, a.time, a.status, a.remarks
+                        FROM appointments a 
+                        LEFT JOIN users u ON a.user_id = u.id 
+                        ORDER BY a.date DESC, a.time ASC";
 
         $appointmentsResult = $conn->query($appointmentsQuery);
         
@@ -59,6 +60,7 @@ try {
     $patientPercentChange = 0;
     $totalAppointments = count($appointments);
     $appointmentPercentChange = 0;
+    $totalApproved = 0;  // Initialize the total approved appointments variable
     $totalInquiries = 0;
     $inquiryPercentChange = 0;
 
@@ -69,6 +71,16 @@ try {
         if ($totalPatientsResult && $totalPatientsResult->num_rows > 0) {
             $totalPatients = $totalPatientsResult->fetch_assoc()['total'];
         }
+    }
+
+    // Get the total approved appointments
+    $totalApprovedQuery = "SELECT COUNT(*) as total FROM appointments WHERE status = 'approved'";
+    $totalApprovedResult = $conn->query($totalApprovedQuery);
+    if ($totalApprovedResult && $totalApprovedResult->num_rows > 0) {
+        $totalApproved = $totalApprovedResult->fetch_assoc()['total'];
+    } else {
+        // If no approved appointments are found, set to 0
+        $totalApproved = 0;
     }
 
     // Get monthly stats for percentage changes
@@ -156,6 +168,7 @@ try {
             "totalPatients" => $totalPatients,
             "patientPercentChange" => $patientPercentChange,
             "totalAppointments" => $totalAppointments,
+            "totalApproved" => $totalApproved,  // Include total approved appointments
             "appointmentPercentChange" => $appointmentPercentChange,
             "totalInquiries" => $totalInquiries,
             "inquiryPercentChange" => $inquiryPercentChange
