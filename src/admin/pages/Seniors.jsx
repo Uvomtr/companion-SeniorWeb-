@@ -163,7 +163,7 @@ const Seniors = () => {
   return (
     <div className="table-container">
       <div className="table-header">
-        <h2>All Seniors</h2>
+        <h2>All Users</h2>
         <button className="add-senior-button" onClick={() => openModal()}>Add Senior</button>
       </div>
 
