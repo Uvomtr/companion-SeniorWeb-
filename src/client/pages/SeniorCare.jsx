@@ -1,5 +1,4 @@
-import React, { useState, useEffect, Link} from "react";
-
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import "./SeniorCare.css";
 import Navbar from "../components/Navbar";
@@ -94,7 +93,7 @@ const SeniorCare = ({ handleLogout }) => {
 
   return (
     <div className="senior-care-container">
-         <Navbar role="client" />
+      <Navbar role="client" setSelectedService={setSelectedService} />
 
       <h4 className="section-title">SENIOR CARE</h4>
       <h2 className="section-appointment">Book an Appointment</h2>
@@ -141,28 +140,13 @@ const SeniorCare = ({ handleLogout }) => {
         {modalContent === "viewReservedSlot" && (
           <>
             <h2>Your Reserved Slots</h2>
-            {reservedSlots.length > 0 ? (
-              <table>
-                <thead>
-                  <tr>
-                    <th>Service</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reservedSlots.map((slot, index) => (
-                    <tr key={index}>
-                      <td>{slot.service}</td>
-                      <td>{slot.date}</td>
-                      <td>{slot.time}</td>
-                      <td>{slot.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : <p>No reserved slots.</p>}
+            <ul>
+              {reservedSlots.map((slot, index) => (
+                <li key={index}>
+                  {slot.service} on {slot.date} at {slot.time} - Status: {slot.status}
+                </li>
+              ))}
+            </ul>
           </>
         )}
 

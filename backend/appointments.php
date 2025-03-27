@@ -130,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $status = isset($_GET['status']) ? $_GET['status'] : null;
 
         // Prepare the SQL query with optional status filter
-        $sql = "SELECT id, service, date, time, status FROM appointments WHERE user_id = ?";
+        $sql = "SELECT id, service, date, time, status, remarks FROM appointments WHERE user_id = ?";
         if ($status) {
             $sql .= " AND status = ?";
         }
