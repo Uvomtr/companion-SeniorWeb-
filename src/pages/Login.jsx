@@ -62,10 +62,15 @@ const Login = ({ logo }) => {
     }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleLogin(e); // Call handleLogin when Enter is pressed
+    }
+  };
+
   return (
     <div className="login-page">
-      <header className="header" style={{ backgroundColor: "#1e1785", textAlign: "center", color: "white", padding: "10px" }}>
-      </header>
+      <header className="header" style={{ backgroundColor: "#1e1785", textAlign: "center", color: "white", padding: "10px" }}></header>
 
       <div className="logo-container">
         <h1>Barangay General Tiburcio De Leon</h1>
@@ -91,6 +96,7 @@ const Login = ({ logo }) => {
           className="input-field"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          onKeyDown={handleKeyPress} // Listen for the Enter key press
         />
         <input
           type="password"
@@ -98,6 +104,7 @@ const Login = ({ logo }) => {
           className="input-field"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={handleKeyPress} // Listen for the Enter key press
         />
         <button onClick={handleLogin} className="login-button">Login</button>
         <p>
